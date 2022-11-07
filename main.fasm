@@ -1,0 +1,38 @@
+format ELF64 executable
+entry start
+segment readable executable
+print:
+    pop rcx
+    call dec2str
+    mov rax, 1
+    mov rsi, rdi
+    mov rdi, 1
+    mov rdx, 2
+    syscall
+
+dec2str:
+        mov rcx, 10
+    .stack_dec:
+        xor rdx, rdx
+        div rcx
+        add rdx, '0'
+        push rdx
+        test rax, rax
+        jz .purge_dec
+        call .stack_dec
+    .purge_dec:
+        pop qword[rdi]
+        inc rdi
+        ret
+start:
+    push 34
+    push 35
+    pop rax
+    pop rbx
+    add rax, rbx
+    push rax
+    call print
+    push 0
+mov rax, 60
+pop rdi
+syscall
