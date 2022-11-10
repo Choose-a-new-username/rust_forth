@@ -1,38 +1,81 @@
 format ELF64 executable
 entry start
 segment readable executable
-print:
-    pop rcx
-    call dec2str
-    mov rax, 1
-    mov rsi, rdi
+dump:
+    enter 64, 0
+    mov qword[rbp-56], rdi
+    mov byte[rbp-16], 10
+    mov qword[rbp-8], 1
+.L:
+    mov rcx, qword[rbp-56]
+    mov rdx, -3689348814741910323
+    mov rax, rcx
+    mul rdx
+    shr rdx, 3
+    mov rax, rdx
+    sal rax, 2
+    add rax, rdx
+    add rax, rax
+    sub rcx, rax
+    mov rdx, rcx
+    mov eax, edx
+    lea edx, [rax+48]
+    mov eax, 32
+    sub rax, qword[rbp-8]
+    mov byte[rbp-48+rax], dl
+    add qword[rbp-8], 1
+    mov rax, qword[rbp-56]
+    mov rdx, -3689348814741910323
+    mul rdx
+    mov rax, rdx
+    shr rax, 3
+    mov qword[rbp-56], rax
+    cmp qword[rbp-56], 0
+    jne .L
+    mov eax, 33
+    sub rax, qword[rbp-8]
+    lea rdx, [rbp-48]
+    lea rcx, [rdx+rax]
+    mov rdx, qword[rbp-8]
+    mov rsi, rcx
     mov rdi, 1
-    mov rdx, 2
+    mov rax, 1
     syscall
-
-dec2str:
-        mov rcx, 10
-    .stack_dec:
-        xor rdx, rdx
-        div rcx
-        add rdx, '0'
-        push rdx
-        test rax, rax
-        jz .purge_dec
-        call .stack_dec
-    .purge_dec:
-        pop qword[rdi]
-        inc rdi
-        ret
+    leave
+    ret
 start:
-    push 34
-    push 35
-    pop rax
-    pop rbx
-    add rax, rbx
-    push rax
-    call print
     push 0
-mov rax, 60
-pop rdi
-syscall
+    push 10
+    push 33
+    push 100
+    push 108
+    push 114
+    push 111
+    push 119
+    push 32
+    push 44
+    push 111
+    push 108
+    push 108
+    push 101
+    push 72
+.WHILE_1:
+    pop rax
+    push rax
+    push rax
+    pop rax
+    test rax, rax
+    jz .ENDWHILE_1
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, rsp
+    mov rdx, 1
+    syscall
+    pop rax
+    jmp .WHILE_1
+.ENDWHILE_1:
+    push 0
+exit:
+    mov rax, 60
+    pop rdi
+    syscall
