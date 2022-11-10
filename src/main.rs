@@ -10,6 +10,7 @@ enum TokenType {
     DDrop,
     Swap,
     Rot,
+    Over,
     Equal,
     Greater,
     Less,
@@ -72,6 +73,8 @@ fn parse(lexed: Vec<LexedWord>) -> Vec<Token> {
             (TokenType::Swap, word.clone(), None, None)
         } else if word.0 == "rot" {
             (TokenType::Rot, word.clone(), None, None)
+        } else if word.0 == "over" {
+            (TokenType::Over, word.clone(), None, None)
         } else if word.0 == "dump" {
             (TokenType::Dump, word.clone(), None, None)
         } else if word.0 == "asciidump" {
@@ -187,6 +190,7 @@ start:
             TokenType::DDrop => format!("    pop rax\n"),
             TokenType::Swap => format!("    pop rax\n    pop rbx\n    push rax\n    push rbx\n"),
             TokenType::Rot => format!("    pop rax\n    pop rbx\n    pop rcx\n    push rax\n    push rcx\n    push rbx\n"),
+            TokenType::Over => format!("    pop rax\n    pop rbx\n    push rbx\n    push rax\n    push rbx\n"),
             TokenType::Dump => format!("    pop rdi\n    call dump\n"),
             TokenType::AsciiDump => format!("    mov rax, 1\n    mov rdi, 1\n    mov rsi, rsp\n    mov rdx, 1\n    syscall\n    pop rax\n"),
             TokenType::If => {
